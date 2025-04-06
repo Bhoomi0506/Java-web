@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stopwatch Web Application</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            text-align: center;
+            background-color: #1e1e2f;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            margin-top: 30px;
+        }
+
+        .stopwatch {
+            font-size: 48px;
+            margin: 30px auto;
+        }
+
+        .buttons {
+            margin: 20px;
+        }
+
+        button {
+            font-size: 16px;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            background-color: #3f51b5;
+        }
+
+        button:hover {
+            background-color: #303f9f;
+        }
+
+        #laps {
+            list-style: none;
+            padding: 0;
+        }
+
+        #laps li {
+            background: #29293d;
+            margin: 5px auto;
+            padding: 8px 16px;
+            border-radius: 5px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🕒 Stopwatch Web Application</h1>
+    <div class="stopwatch" id="display">00:00:00</div>
+
+    <div class="buttons">
+        <button onclick="start()">Start</button>
+        <button onclick="pause()">Pause</button>
+        <button onclick="reset()">Reset</button>
+        <button onclick="lap()">Lap</button>
+    </div>
+
+    <ul id="laps"></ul>
+
+    <script>
+        let startTime, elapsed = 0, timerInterval;
+        let display = document.getElementById('display');
+        let laps = document.getElementById('laps');
+
+        function formatTime(ms) {
+            let date = new Date(ms);
+            return (
+                String(date.getUTCHours()).padStart(2, '0') + ":" +
+                String(date.getUTCMinutes()).padStart(2, '0') + ":" +
+                String(date.getUTCSeconds()).padStart(2, '0')
+            );
+        }
+
+        function start() {
+            if (!timerInterval) {
+                startTime = Date.now() - elapsed;
+                timerInterval = setInterval(() => {
+                    elapsed = Date.now() - startTime;
+                    display.textContent = formatTime(elapsed);
+                }, 1000);
+            }
+        }
+
+        function pause() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+
+        function reset() {
+            pause();
+            elapsed = 0;
+            display.textContent = "00:00:00";
+            laps.innerHTML = "";
+        }
+
+        function lap() {
+            if (elapsed > 0) {
+                const li = document.createElement('li');
+                li.textContent = formatTime(elapsed);
+                laps.appendChild(li);
+            }
+        }
+    </script>
+</body>
+</html>
